@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "177640065873",
+    "project_id": "family-guys-tree",
+    "storage_bucket": "family-guys-tree.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177640065873:android:b24894cd04abc2748d2170",
+        "android_client_info": {
+          "package_name": "com.example.family_guys"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177640065873-lojk9v4hv176opcfn1u28gr1oqt2lh5i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.family_guys",
+            "certificate_hash": "ff5c713dc3bb9a7e65647805bdbeaaf113fa6287"
+          }
+        },
+        {
+          "client_id": "177640065873-3qhjti9not7ftnjlu8n36bhs7ddbg02i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9POIpyZtmseT4q4AbgHK4-v90b0XgJgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177640065873-3qhjti9not7ftnjlu8n36bhs7ddbg02i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

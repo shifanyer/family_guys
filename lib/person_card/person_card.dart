@@ -3,27 +3,9 @@ import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
 import 'package:family_guys/person_card/select_list.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:fluttericon/brandico_icons.dart';
-import 'package:fluttericon/elusive_icons.dart';
-import 'package:fluttericon/entypo_icons.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
-import 'package:fluttericon/font_awesome_icons.dart';
-import 'package:fluttericon/fontelico_icons.dart';
-import 'package:fluttericon/iconic_icons.dart';
-import 'package:fluttericon/linearicons_free_icons.dart';
-import 'package:fluttericon/linecons_icons.dart';
-import 'package:fluttericon/maki_icons.dart';
-import 'package:fluttericon/meteocons_icons.dart';
-import 'package:fluttericon/mfg_labs_icons.dart';
-import 'package:fluttericon/modern_pictograms_icons.dart';
-import 'package:fluttericon/octicons_icons.dart';
-import 'package:fluttericon/rpg_awesome_icons.dart';
-import 'package:fluttericon/typicons_icons.dart';
-import 'package:fluttericon/web_symbols_icons.dart';
-import 'package:fluttericon/zocial_icons.dart';
 
 class PersonCard extends StatefulWidget {
   final PersonInfo personInformation;
@@ -109,7 +91,6 @@ class _PersonCardState extends State<PersonCard> {
                     TextButton(
                       child: const Text('родители'),
                       onPressed: () {
-                        /* ... */
                       },
                     ),
                     const SizedBox(width: 8),

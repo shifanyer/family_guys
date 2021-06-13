@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'db_methods/db_main_methods.dart';
 import 'info_objects/person_info.dart';
 import 'lines/lines.dart';
 import 'person_card/person_card.dart';
@@ -31,6 +33,8 @@ class _CardPageState extends State<CardPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
+          // DbMainMethods.uploadPerson(widget.personInfo);
+          DbMainMethods.downloadPerson('-Mc61goe-2Chxq_-Uwmi');
 
         },
         child: Icon(Icons.add),
