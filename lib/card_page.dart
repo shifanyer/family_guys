@@ -32,9 +32,16 @@ class _CardPageState extends State<CardPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () async {
           // DbMainMethods.uploadPerson(widget.personInfo);
-          DbMainMethods.downloadPerson('-Mc61goe-2Chxq_-Uwmi');
+          var downloadedMapInfo = await DbMainMethods.downloadPerson('-Mc61goe-2Chxq_-Uwmi');
+          var downloadedPersonInfo = DbMainMethods.makePersonInfo(downloadedMapInfo);
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => CardPage(
+                    personInfo: downloadedPersonInfo,
+                  )));
 
         },
         child: Icon(Icons.add),

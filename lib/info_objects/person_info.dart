@@ -15,6 +15,11 @@ class PersonInfo {
 
   List? otherNames;
 
+  List<String>? spouses;
+  List<String>? children;
+  List<String>? parents;
+  List<String>? friends;
+
   PersonInfo(
       {this.surname,
       this.name,
@@ -25,7 +30,11 @@ class PersonInfo {
       this.deathDate,
       this.minDeathDate,
       this.maxDeathDate,
-      this.otherNames});
+      this.otherNames,
+      this.spouses,
+      this.children,
+      this.parents,
+      this.friends});
 
   PersonInfo.clone(PersonInfo randomObject)
       : this(
@@ -41,10 +50,14 @@ class PersonInfo {
             otherNames: randomObject.otherNames);
 
   String nameDisplay() {
-    if ((name == null) && (surname == null) && (patronymic == null)) {
+    if ((((name == null) || (name == '')) && ((surname == null) || (surname == '')) && ((patronymic == null) || (patronymic == '')))) {
       return '??????';
     } else {
-      return ((surname ?? '') + (surname != null ? ' ' : '') + (name ?? '') + (name != null ? ' ' : '') + (patronymic ?? ''));
+      return ((surname ?? '') +
+          (((surname != null) && (surname != '')) ? ' ' : '') +
+          (name ?? '') +
+          (((name != null) && (name != '')) ? ' ' : '') +
+          (patronymic ?? ''));
     }
   }
 
