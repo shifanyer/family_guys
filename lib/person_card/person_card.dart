@@ -1,4 +1,5 @@
 import 'package:family_guys/card_page.dart';
+import 'package:family_guys/db_methods/db_main_methods.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
@@ -27,7 +28,21 @@ class _PersonCardState extends State<PersonCard> {
     personInformation = PersonInfo(name: 'Игорь', patronymic: 'Рюрикович', birthDate: DateInfo(year: 912), deathDate: DateInfo(year: 945));
     var svyatChild = PersonInfo(name: 'Святослав', patronymic: 'Игоревич', birthDate: DateInfo(year: 920), deathDate: DateInfo(year: 972));
     var ulebChild = PersonInfo(name: 'Улеб', patronymic: 'Игоревич', deathDate: DateInfo(year: 971));
-    IgorChildren.addAll([ulebChild, svyatChild, ulebChild, svyatChild, ulebChild, svyatChild, ulebChild, svyatChild, ulebChild, svyatChild, svyatChild, svyatChild, svyatChild]);
+    IgorChildren.addAll([
+      ulebChild,
+      svyatChild,
+      ulebChild,
+      svyatChild,
+      ulebChild,
+      svyatChild,
+      ulebChild,
+      svyatChild,
+      ulebChild,
+      svyatChild,
+      svyatChild,
+      svyatChild,
+      svyatChild
+    ]);
     super.initState();
   }
 
@@ -35,7 +50,7 @@ class _PersonCardState extends State<PersonCard> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 20.0, left: 10, right: 10),
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           if (widget.shortInfo) {
             Navigator.pop(context);
@@ -72,9 +87,18 @@ class _PersonCardState extends State<PersonCard> {
                         showModalBottomSheet(
                           context: context,
                           builder: (context) {
-                            return SelectField(
-                              children: IgorChildren,
-                            );
+                            return FutureBuilder<List<PersonInfo>>(
+                                future: DbMainMethods.loadChildren(widget.personInformation.id!),
+                                builder: (context, childrenSnapshot) {
+                                  if (childrenSnapshot.hasData) {
+                                    return SelectField(
+                                      children: childrenSnapshot.data ?? [],
+                                      isLoading: !childrenSnapshot.hasData,
+                                    );
+                                  } else {
+                                    return LinearProgressIndicator();
+                                  }
+                                });
                           },
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -90,8 +114,7 @@ class _PersonCardState extends State<PersonCard> {
                     const SizedBox(width: 8),
                     TextButton(
                       child: const Text('родители'),
-                      onPressed: () {
-                      },
+                      onPressed: () {},
                     ),
                     const SizedBox(width: 8),
                   ],

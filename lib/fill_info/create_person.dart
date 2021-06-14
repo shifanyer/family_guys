@@ -1,8 +1,13 @@
+import 'package:family_guys/db_methods/db_main_methods.dart';
+import 'package:family_guys/info_objects/date.dart';
+import 'package:family_guys/info_objects/person_info.dart';
+import 'package:family_guys/person_card/person_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import '../card_page.dart';
 import 'date_choose.dart';
 
 class Animal {
@@ -68,6 +73,7 @@ class _SelectPageState extends State<SelectPage> {
   late TextEditingController birthDateController;
   late TextEditingController deathDateController;
   PickerDateRange datesRange = PickerDateRange(DateTime.now(), DateTime.now());
+  bool isUpload = false;
 
   @override
   void initState() {
@@ -218,6 +224,27 @@ class _SelectPageState extends State<SelectPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          setState(() {
+            isUpload = true;
+          });
+          var personInfo = toPersonInfo();
+          await DbMainMethods.uploadPerson(personInfo);
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              CupertinoPageRoute(
+                  builder: (context) => CardPage(
+                        personInfo: personInfo,
+                      )));
+        },
+        child: isUpload
+            ? CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              )
+            : Text('ADD'),
+      ),
     );
   }
 
@@ -226,4 +253,19 @@ class _SelectPageState extends State<SelectPage> {
         " - " +
         "${dates.endDate?.day ?? '?'}.${dates.endDate?.month ?? '?'}.${dates.endDate?.year ?? '?'}";
   }
+
+  DateInfo makeDateInfo(DateTime? date){
+    return DateInfo(day: date?.day ?? 666999, month: date?.month ?? 666999, year: date?.year ?? 666999);
+  }
+
+  PersonInfo toPersonInfo() {
+    var personInfo = PersonInfo(
+        name: nameController.text,
+        surname: surnameController.text,
+        patronymic: patronymicController.text,
+        birthDate: makeDateInfo(datesRange.startDate),
+        deathDate: makeDateInfo(datesRange.endDate));
+    return personInfo;
+  }
+
 }

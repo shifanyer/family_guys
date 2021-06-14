@@ -5,10 +5,15 @@ class DateInfo {
 
   DateInfo({this.day, this.month, this.year});
 
-  DateInfo.Jesus()
+  DateInfo.jesus()
       : day = 0,
         month = 0,
         year = 0;
+
+  DateInfo.emptyDate()
+      : day = 666999,
+        month = 666999,
+        year = 666999;
 
   String displayDate() {
     var resDay = day;

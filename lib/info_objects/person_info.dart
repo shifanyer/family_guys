@@ -1,6 +1,8 @@
 import 'date.dart';
 
 class PersonInfo {
+  String? id;
+
   String? surname;
   String? name;
   String? patronymic;
@@ -21,7 +23,8 @@ class PersonInfo {
   List<String>? friends;
 
   PersonInfo(
-      {this.surname,
+      {this.id,
+      this.surname,
       this.name,
       this.patronymic,
       this.birthDate,
@@ -61,5 +64,5 @@ class PersonInfo {
     }
   }
 
-  PersonInfo.Igor() : this(name: 'Игорь', patronymic: 'Рюрикович', birthDate: DateInfo(year: 912), deathDate: DateInfo(year: 945));
+  PersonInfo.Igor() : this(id: '-McAWaTcf7V9_Incz9ZG', name: 'Игорь', patronymic: 'Рюрикович', birthDate: DateInfo(year: 912), deathDate: DateInfo(year: 945));
 }
