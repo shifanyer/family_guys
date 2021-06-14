@@ -2,7 +2,7 @@ import 'package:family_guys/card_page.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
-import 'package:family_guys/person_card/select_list.dart';
+import 'select_list.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
