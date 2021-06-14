@@ -1,13 +1,19 @@
+import 'package:family_guys/db_methods/db_main_methods.dart';
+import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/person_card/person_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
-class SelectField extends StatelessWidget {
-  final List<PersonInfo> children;
+class SelectPerson extends StatelessWidget {
+  final List<PersonInfo> persons;
   final bool isLoading;
+  final String noItemsMessage;
+  final PersonInfo? makeConnectionWithPerson;
 
-  const SelectField({Key? key, required this.children, required this.isLoading}) : super(key: key);
+  const SelectPerson({Key? key, required this.persons, required this.isLoading, required this.noItemsMessage, this.makeConnectionWithPerson})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +23,37 @@ class SelectField extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: 0.7,
       builder: (BuildContext context, ScrollController scrollController) {
-        if (children.length == 0){
-          return Center(child: Text('У этого человека не найдено детей'));
+        if (persons.length == 0) {
+          return Center(child: Text(noItemsMessage));
         }
         return ListView.builder(
           controller: scrollController,
-          itemCount: children.length,
+          itemCount: persons.length,
           itemBuilder: (BuildContext context, int index) {
+            if (makeConnectionWithPerson != null) {
+              return GestureDetector(
+                onDoubleTap: () async {
+                  await DbMainMethods.makeConnection(makeConnectionWithPerson?.id ?? '', persons[index].id ?? '', ConnectionType.parents_children);
+                  Fluttertoast.showToast(
+                      msg: 'Ребёнок добавлен',
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 3,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0
+                  );
+                  Navigator.pop(context);
+
+                },
+                child: PersonCard(
+                  personInformation: persons[index],
+                  shortInfo: true,
+                  activeTaps: false,
+                ),
+              );
+            }
             return PersonCard(
-              personInformation: children[index],
+              personInformation: persons[index],
               shortInfo: true,
             );
           },

@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 class PersonCard extends StatefulWidget {
   final PersonInfo personInformation;
   final bool shortInfo;
+  final bool activeTaps;
 
-  const PersonCard({Key? key, required this.personInformation, required this.shortInfo}) : super(key: key);
+  const PersonCard({Key? key, required this.personInformation, required this.shortInfo, this.activeTaps = true}) : super(key: key);
 
   @override
   _PersonCardState createState() => _PersonCardState();
@@ -51,15 +52,45 @@ class _PersonCardState extends State<PersonCard> {
     return Container(
       margin: EdgeInsets.only(top: 20.0, left: 10, right: 10),
       child: GestureDetector(
+        onLongPress: () {
+          if (widget.activeTaps) {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return FutureBuilder<List<PersonInfo>>(
+                    future: DbMainMethods.loadAllPersons(),
+                    builder: (context, childrenSnapshot) {
+                      if (childrenSnapshot.hasData) {
+                        return SelectPerson(
+                          persons: childrenSnapshot.data ?? [],
+                          isLoading: !childrenSnapshot.hasData,
+                          noItemsMessage: 'У Вас нет других людей',
+                          makeConnectionWithPerson: widget.personInformation,
+                        );
+                      } else {
+                        return LinearProgressIndicator();
+                      }
+                    });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              isScrollControlled: false,
+              isDismissible: true,
+            );
+          }
+        },
         onTap: () {
-          if (widget.shortInfo) {
-            Navigator.pop(context);
-            Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) => CardPage(
-                          personInfo: widget.personInformation,
-                        )));
+          if (widget.activeTaps) {
+            if (widget.shortInfo) {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => CardPage(
+                            personInfo: widget.personInformation,
+                          )));
+            }
           }
         },
         child: Card(
@@ -91,9 +122,10 @@ class _PersonCardState extends State<PersonCard> {
                                 future: DbMainMethods.loadChildren(widget.personInformation.id!),
                                 builder: (context, childrenSnapshot) {
                                   if (childrenSnapshot.hasData) {
-                                    return SelectField(
-                                      children: childrenSnapshot.data ?? [],
+                                    return SelectPerson(
+                                      persons: childrenSnapshot.data ?? [],
                                       isLoading: !childrenSnapshot.hasData,
+                                      noItemsMessage: 'У этого человека не найлено детей',
                                     );
                                   } else {
                                     return LinearProgressIndicator();
@@ -106,15 +138,37 @@ class _PersonCardState extends State<PersonCard> {
                           isScrollControlled: false,
                           isDismissible: true,
                         );
-                        // setState(() {
-                        //   SelectField();
-                        // });
                       },
                     ),
                     const SizedBox(width: 8),
                     TextButton(
                       child: const Text('родители'),
-                      onPressed: () {},
+                      onPressed: () {
+                        // SelectField();
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return FutureBuilder<List<PersonInfo>>(
+                                future: DbMainMethods.loadParents(widget.personInformation.id!),
+                                builder: (context, childrenSnapshot) {
+                                  if (childrenSnapshot.hasData) {
+                                    return SelectPerson(
+                                      persons: childrenSnapshot.data ?? [],
+                                      isLoading: !childrenSnapshot.hasData,
+                                      noItemsMessage: 'У этого человека не найлено родителей',
+                                    );
+                                  } else {
+                                    return LinearProgressIndicator();
+                                  }
+                                });
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          isScrollControlled: false,
+                          isDismissible: true,
+                        );
+                      },
                     ),
                     const SizedBox(width: 8),
                   ],

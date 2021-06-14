@@ -1,3 +1,4 @@
+import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -27,6 +28,7 @@ class DbMainMethods {
     uploadBirthDate();
     uploadDeathDate();
     newPerson.child('person_information').child('id').set(newPerson.key);
+    FirebaseDatabase.instance.reference().child('available_persons').child(newPerson.key).set(newPerson.key);
   }
 
   static downloadPerson(String personID) async {
@@ -66,17 +68,68 @@ class DbMainMethods {
 
     DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child(personID).child('children');
     var childrenList = await personsChildren.once();
-    if (childrenList.value == null){
+    if (childrenList.value == null) {
       return [];
     }
 
     var idList = makeIdList(childrenList.value);
 
     var personInfoList = <PersonInfo>[];
-    for (var id in idList){
+    for (var id in idList) {
       var childInfo = await downloadPerson(id);
       personInfoList.add(makePersonInfo(childInfo));
     }
     return personInfoList;
   }
+
+  static Future<List<PersonInfo>> loadParents(String personID) async {
+    List makeIdList(Map children) {
+      return children.keys.toList();
+    }
+
+    DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child(personID).child('parents');
+    var childrenList = await personsChildren.once();
+    if (childrenList.value == null) {
+      return [];
+    }
+
+    var idList = makeIdList(childrenList.value);
+
+    var personInfoList = <PersonInfo>[];
+    for (var id in idList) {
+      var childInfo = await downloadPerson(id);
+      personInfoList.add(makePersonInfo(childInfo));
+    }
+    return personInfoList;
+  }
+
+  static Future<List<PersonInfo>> loadAllPersons() async {
+    List makeIdList(Map children) {
+      return children.keys.toList();
+    }
+
+    DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child('available_persons');
+    var childrenList = await personsChildren.once();
+    if (childrenList.value == null) {
+      return [];
+    }
+
+    var idList = makeIdList(childrenList.value);
+
+    var personInfoList = <PersonInfo>[];
+    for (var id in idList) {
+      var childInfo = await downloadPerson(id);
+      personInfoList.add(makePersonInfo(childInfo));
+    }
+    return personInfoList;
+  }
+
+  static makeConnection(String firstPersonId, String secondPersonId, ConnectionType connectionType) async {
+    var firstPersonField = connectionType.toString().split('.').last.split('_').last;
+    var secondPersonField = connectionType.toString().split('.').last.split('_').first;
+    print('${firstPersonField} ${secondPersonField}');
+    await FirebaseDatabase.instance.reference().child(firstPersonId).child(firstPersonField).child(secondPersonId).set(secondPersonId);
+    await FirebaseDatabase.instance.reference().child(secondPersonId).child(secondPersonField).child(firstPersonId).set(firstPersonId);
+  }
+
 }
