@@ -103,11 +103,11 @@ class DbMainMethods {
     return personInfoList;
   }
 
-  static Future<List<PersonInfo>> loadAllPersons() async {
-    List makeIdList(Map children) {
-      return children.keys.toList();
-    }
+  static List<String> makeIdList(Map children) {
+    return (children.keys.toList() as List<String>);
+  }
 
+  static Future<List<PersonInfo>> loadAllPersons() async {
     DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child('available_persons');
     var childrenList = await personsChildren.once();
     if (childrenList.value == null) {
@@ -132,4 +132,13 @@ class DbMainMethods {
     await FirebaseDatabase.instance.reference().child(secondPersonId).child(secondPersonField).child(firstPersonId).set(firstPersonId);
   }
 
+  static Future<List<String>> downloadPersonImagesIdList(String personId) async {
+    var imagesIdList = await FirebaseDatabase.instance.reference().child(personId).child('images').once();
+    if (imagesIdList.value == null) {
+      return [];
+    }
+
+    var idList = makeIdList(imagesIdList.value);
+    return idList;
+  }
 }

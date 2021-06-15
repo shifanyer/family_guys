@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 
 class FireStorageService extends ChangeNotifier {
   FireStorageService._();
+
   FireStorageService();
 
-  static Future<dynamic> loadFromStorage(
-      BuildContext context, String image) async {
-    return await FirebaseStorage.instance.ref().child(image).getDownloadURL();
+  static Future<dynamic> loadFromStorage(BuildContext context, List<String> imagePath) async {
+    var FirebaseStorageImg = FirebaseStorage.instance.ref();
+    for (var pathItem in imagePath) {
+      FirebaseStorageImg = FirebaseStorageImg.child(pathItem);
+    }
+    return await FirebaseStorageImg.getDownloadURL();
   }
 }

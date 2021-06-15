@@ -39,7 +39,7 @@ class _PersonCardState extends State<PersonCard> {
     var fullPersonCard = BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
-        child: FullPersonCard(),
+        child: FullPersonCard(personInfo: widget.personInformation,),
       ),
     );
 
@@ -50,9 +50,10 @@ class _PersonCardState extends State<PersonCard> {
           GestureDetector(
             onLongPress: () {
               if (widget.activeTaps) {
-                setState(() {
-                  showFullPersonCard = true;
-                });
+                Navigator.push(context, CupertinoPageRoute(builder: (context) => FullPersonCard(personInfo: widget.personInformation,)));
+                // setState(() {
+                //   showFullPersonCard = true;
+                // });
                 // Navigator.push(context, CupertinoPageRoute(builder: (context) => FullPersonCard()));
                 /*
                 showModalBottomSheet(
