@@ -11,9 +11,17 @@ class SelectPerson extends StatelessWidget {
   final bool isLoading;
   final String noItemsMessage;
   final PersonInfo? makeConnectionWithPerson;
+  final ConnectionType? connectionType;
 
-  const SelectPerson({Key? key, required this.persons, required this.isLoading, required this.noItemsMessage, this.makeConnectionWithPerson})
+  const SelectPerson({Key? key, required this.persons, required this.isLoading, required this.noItemsMessage, this.makeConnectionWithPerson, this.connectionType})
       : super(key: key);
+
+  static const Map<ConnectionType, String> typeMessage = {
+    ConnectionType.friends_friends : 'Друг добавлен',
+    ConnectionType.spouses_spouses : 'Супруг добавлен',
+    ConnectionType.parents_children : 'Ребёнок добавлен',
+    ConnectionType.children_parents : 'Родитель добавлен',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +41,17 @@ class SelectPerson extends StatelessWidget {
             if (makeConnectionWithPerson != null) {
               return GestureDetector(
                 onDoubleTap: () async {
-                  await DbMainMethods.makeConnection(makeConnectionWithPerson?.id ?? '', persons[index].id ?? '', ConnectionType.parents_children);
+                  Navigator.pop(context);
+                  await DbMainMethods.makeConnection(makeConnectionWithPerson?.id ?? '', persons[index].id ?? '', connectionType!);
                   Fluttertoast.showToast(
-                      msg: 'Ребёнок добавлен',
+                      msg: typeMessage[connectionType] ?? 'Связь добавлена',
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 3,
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
                       fontSize: 16.0
                   );
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
 
                 },
                 child: PersonCard(

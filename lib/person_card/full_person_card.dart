@@ -1,10 +1,15 @@
+import 'package:family_guys/buttons/menu_button.dart';
 import 'package:family_guys/db_methods/db_main_methods.dart';
 import 'package:family_guys/db_methods/fire_storages/fire_storage_service.dart';
+import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/person_info.dart';
+import 'package:family_guys/my_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+
+import 'select_list.dart';
 
 class FullPersonCard extends StatefulWidget {
   final PersonInfo personInfo;
@@ -31,8 +36,10 @@ class _FullPersonCardState extends State<FullPersonCard> {
   Future<List<Image>> getImagesList({required BuildContext context, required String personId}) async {
     var imageIdList = await DbMainMethods.downloadPersonImagesIdList(personId);
     var imagesList = <Image>[];
+    print('imageIdList: ${imageIdList}');
     for (var imageId in imageIdList) {
       var path = [personId, imageId];
+      print('imagePath: ${path}');
       var img = await getImage(context, path);
       imagesList.add(img);
     }
@@ -41,6 +48,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
 
   @override
   Widget build(BuildContext context) {
+    var relativesButtonHeight = 170.0;
     // var image = '0917f0e1f3493166ff7ad5593898fee1c316846c-1609576653.webp';
     var image = 'sticker.png';
     return Container(
@@ -79,8 +87,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
                 var galleryItems = <Image>[];
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
-                    if (snapshot.data!.length == 0)
-                      return Container();
+                    if (snapshot.data!.length == 0) return Container();
                     galleryItems.addAll((snapshot.data)!);
                     return Container(
                         color: Colors.white10,
@@ -129,6 +136,207 @@ class _FullPersonCardState extends State<FullPersonCard> {
             ),
           ),
           SliverToBoxAdapter(
+            child: Row(
+              children: [
+                GestureDetector(
+                  child: Container(
+                    color: Colors.blueAccent,
+                    width: MediaQuery.of(context).size.width / 4,
+                    // height: relativesButtonHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                return bottomShowConnections(
+                                    DbMainMethods.loadConnectionsByType(widget.personInfo.id!, 'parents'), 'У этого человека не найдено родителей');
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    child: Icon(
+                                      CustomIcons.parents,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Родители', style: TextStyle(color: Colors.black87, fontSize: 16, decoration: TextDecoration.none)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 1, top: 10),
+                            child: CircleButton(
+                                width: MediaQuery.of(context).size.width / 5,
+                                color: Colors.white,
+                                icon: Icons.add,
+                                onClick: () {
+                                  return bottomAddConnection(widget.personInfo, ConnectionType.children_parents);
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child: Container(
+                    color: Colors.yellowAccent,
+                    width: MediaQuery.of(context).size.width / 4,
+                    // height: relativesButtonHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                return bottomShowConnections(
+                                    DbMainMethods.loadConnectionsByType(widget.personInfo.id!, 'children'), 'У этого человека не найдено детей');
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.child_care,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Дети', style: TextStyle(color: Colors.black87, fontSize: 16, decoration: TextDecoration.none)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 1, top: 10),
+                            child: CircleButton(
+                                width: MediaQuery.of(context).size.width / 5,
+                                color: Colors.white,
+                                icon: Icons.add,
+                                onClick: () {
+                                  return bottomAddConnection(widget.personInfo, ConnectionType.parents_children);
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child: Container(
+                    color: Colors.greenAccent,
+                    width: MediaQuery.of(context).size.width / 4,
+                    // height: relativesButtonHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                return bottomShowConnections(
+                                    DbMainMethods.loadConnectionsByType(widget.personInfo.id!, 'spouses'), 'У этого человека не найдено супругов');
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                      height: 30,
+                                      child: Icon(
+                                        CustomIcons.marriage,
+                                        size: 30,
+                                      )),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Супруги', style: TextStyle(color: Colors.black87, fontSize: 16, decoration: TextDecoration.none)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 1, top: 10),
+                            child: CircleButton(
+                                width: MediaQuery.of(context).size.width / 5,
+                                color: Colors.white,
+                                icon: Icons.add,
+                                onClick: () {
+                                  return bottomAddConnection(widget.personInfo, ConnectionType.spouses_spouses);
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  child: Container(
+                    color: Colors.redAccent,
+                    width: MediaQuery.of(context).size.width / 4,
+                    // height: relativesButtonHeight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: GestureDetector(
+                              onTap: () {
+                                return bottomShowConnections(
+                                    DbMainMethods.loadConnectionsByType(widget.personInfo.id!, 'friends'), 'У этого человека не найдено друзей');
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    child: Icon(
+                                      Icons.clean_hands_rounded,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text('Друзья', style: TextStyle(color: Colors.black87, fontSize: 16, decoration: TextDecoration.none)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 1, top: 10),
+                            child: CircleButton(
+                                width: MediaQuery.of(context).size.width / 5,
+                                color: Colors.white,
+                                icon: Icons.add,
+                                onClick: () {
+                                  return bottomAddConnection(widget.personInfo, ConnectionType.friends_friends);
+                                }),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              color: Colors.grey,
+              width: 10,
+              height: 60,
+            ),
+          ),
+          /*
+          SliverToBoxAdapter(
             child: Container(
               color: Colors.redAccent,
               width: 10,
@@ -149,8 +357,64 @@ class _FullPersonCardState extends State<FullPersonCard> {
               height: 60,
             ),
           ),
+
+           */
         ],
       ),
+    );
+  }
+
+  bottomAddConnection(PersonInfo firstPersonInfo, ConnectionType connectionType) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return FutureBuilder<List<PersonInfo>>(
+            future: DbMainMethods.loadAllPersons(),
+            builder: (context, childrenSnapshot) {
+              if (childrenSnapshot.hasData) {
+                return SelectPerson(
+                  persons: childrenSnapshot.data ?? [],
+                  isLoading: !childrenSnapshot.hasData,
+                  noItemsMessage: 'У Вас нет других людей',
+                  makeConnectionWithPerson: firstPersonInfo,
+                  connectionType: connectionType,
+                );
+              } else {
+                return LinearProgressIndicator();
+              }
+            });
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      isScrollControlled: false,
+      isDismissible: true,
+    );
+  }
+
+  bottomShowConnections(Future<List<PersonInfo>> future, String noItemsMessage) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return FutureBuilder<List<PersonInfo>>(
+            future: future,
+            builder: (context, childrenSnapshot) {
+              if (childrenSnapshot.hasData) {
+                return SelectPerson(
+                  persons: childrenSnapshot.data ?? [],
+                  isLoading: !childrenSnapshot.hasData,
+                  noItemsMessage: noItemsMessage,
+                );
+              } else {
+                return LinearProgressIndicator();
+              }
+            });
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      isScrollControlled: false,
+      isDismissible: true,
     );
   }
 }

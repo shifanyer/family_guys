@@ -17,10 +17,10 @@ class CircleButton extends StatelessWidget {
       decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       width: width,
       height: height,
-      child: IconButton(
-        icon: Icon(icon),
-        onPressed: onClick,
-        enableFeedback: true,
+      child: GestureDetector(
+        child: Icon(icon, size: 40, color: Colors.black87,),
+        onTap: onClick,
+        // enableFeedback: true,
       ),
     );
   }

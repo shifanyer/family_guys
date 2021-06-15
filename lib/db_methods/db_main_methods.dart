@@ -61,6 +61,28 @@ class DbMainMethods {
         deathDate: DateInfo(day: deathDay, month: deathMonth, year: deathYear));
   }
 
+
+  static Future<List<PersonInfo>> loadConnectionsByType(String personID, String connectionType) async {
+    List makeIdList(Map children) {
+      return children.keys.toList();
+    }
+
+    DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child(personID).child(connectionType);
+    var childrenList = await personsChildren.once();
+    if (childrenList.value == null) {
+      return [];
+    }
+
+    var idList = makeIdList(childrenList.value);
+
+    var personInfoList = <PersonInfo>[];
+    for (var id in idList) {
+      var childInfo = await downloadPerson(id);
+      personInfoList.add(makePersonInfo(childInfo));
+    }
+    return personInfoList;
+  }
+
   static Future<List<PersonInfo>> loadChildren(String personID) async {
     List makeIdList(Map children) {
       return children.keys.toList();
@@ -104,7 +126,12 @@ class DbMainMethods {
   }
 
   static List<String> makeIdList(Map children) {
-    return (children.keys.toList() as List<String>);
+    return (children.keys.map((e) => e.toString()).toList());
+  }
+
+  static List<String> makeValuesList(Map children) {
+    print('children: ${children} ${children.values.toList()}');
+    return (children.values.map((e) => e.toString()).toList());
   }
 
   static Future<List<PersonInfo>> loadAllPersons() async {
@@ -133,12 +160,15 @@ class DbMainMethods {
   }
 
   static Future<List<String>> downloadPersonImagesIdList(String personId) async {
+    print('AAAAAAAAAA');
     var imagesIdList = await FirebaseDatabase.instance.reference().child(personId).child('images').once();
     if (imagesIdList.value == null) {
       return [];
     }
 
-    var idList = makeIdList(imagesIdList.value);
+    print(imagesIdList.value);
+    var idList = makeValuesList(imagesIdList.value);
+    print('idList: ${idList}');
     return idList;
   }
 }
