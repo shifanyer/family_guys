@@ -167,7 +167,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
               children: [
                 GestureDetector(
                   child: Container(
-                    color: Colors.blueAccent,
+                    color: Colors.transparent,
                     width: MediaQuery.of(context).size.width / 4,
                     // height: relativesButtonHeight,
                     child: Padding(
@@ -199,13 +199,15 @@ class _FullPersonCardState extends State<FullPersonCard> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 1, top: 10),
-                            child: CircleButton(
-                                width: MediaQuery.of(context).size.width / 5,
-                                color: Colors.white,
-                                icon: Icons.add,
-                                onClick: () {
-                                  return bottomAddConnection(widget.personInfo, ConnectionType.children_parents);
-                                }),
+                            child: Card(
+                              child: CircleButton(
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  color: Colors.white,
+                                  icon: Icons.add,
+                                  onClick: () {
+                                    return bottomAddConnection(widget.personInfo, ConnectionType.children_parents);
+                                  }),
+                            ),
                           )
                         ],
                       ),
@@ -214,7 +216,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
                 ),
                 GestureDetector(
                   child: Container(
-                    color: Colors.yellowAccent,
+                    color: Colors.transparent,
                     width: MediaQuery.of(context).size.width / 4,
                     // height: relativesButtonHeight,
                     child: Padding(
@@ -246,13 +248,15 @@ class _FullPersonCardState extends State<FullPersonCard> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 1, top: 10),
-                            child: CircleButton(
-                                width: MediaQuery.of(context).size.width / 5,
-                                color: Colors.white,
-                                icon: Icons.add,
-                                onClick: () {
-                                  return bottomAddConnection(widget.personInfo, ConnectionType.parents_children);
-                                }),
+                            child: Card(
+                              child: CircleButton(
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  color: Colors.white,
+                                  icon: Icons.add,
+                                  onClick: () {
+                                    return bottomAddConnection(widget.personInfo, ConnectionType.parents_children);
+                                  }),
+                            ),
                           )
                         ],
                       ),
@@ -261,7 +265,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
                 ),
                 GestureDetector(
                   child: Container(
-                    color: Colors.greenAccent,
+                    color: Colors.transparent,
                     width: MediaQuery.of(context).size.width / 4,
                     // height: relativesButtonHeight,
                     child: Padding(
@@ -292,13 +296,15 @@ class _FullPersonCardState extends State<FullPersonCard> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 1, top: 10),
-                            child: CircleButton(
-                                width: MediaQuery.of(context).size.width / 5,
-                                color: Colors.white,
-                                icon: Icons.add,
-                                onClick: () {
-                                  return bottomAddConnection(widget.personInfo, ConnectionType.spouses_spouses);
-                                }),
+                            child: Card(
+                              child: CircleButton(
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  color: Colors.white,
+                                  icon: Icons.add,
+                                  onClick: () {
+                                    return bottomAddConnection(widget.personInfo, ConnectionType.spouses_spouses);
+                                  }),
+                            ),
                           )
                         ],
                       ),
@@ -307,7 +313,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
                 ),
                 GestureDetector(
                   child: Container(
-                    color: Colors.redAccent,
+                    color: Colors.transparent,
                     width: MediaQuery.of(context).size.width / 4,
                     // height: relativesButtonHeight,
                     child: Padding(
@@ -339,13 +345,15 @@ class _FullPersonCardState extends State<FullPersonCard> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(bottom: 1, top: 10),
-                            child: CircleButton(
-                                width: MediaQuery.of(context).size.width / 5,
-                                color: Colors.white,
-                                icon: Icons.add,
-                                onClick: () {
-                                  return bottomAddConnection(widget.personInfo, ConnectionType.friends_friends);
-                                }),
+                            child: Card(
+                              child: CircleButton(
+                                  width: MediaQuery.of(context).size.width / 5,
+                                  color: Colors.white,
+                                  icon: Icons.add,
+                                  onClick: () {
+                                    return bottomAddConnection(widget.personInfo, ConnectionType.friends_friends);
+                                  }),
+                            ),
                           )
                         ],
                       ),
