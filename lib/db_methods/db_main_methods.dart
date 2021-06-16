@@ -61,7 +61,6 @@ class DbMainMethods {
         deathDate: DateInfo(day: deathDay, month: deathMonth, year: deathYear));
   }
 
-
   static Future<List<PersonInfo>> loadConnectionsByType(String personID, String connectionType) async {
     List makeIdList(Map children) {
       return children.keys.toList();
@@ -170,5 +169,10 @@ class DbMainMethods {
     var idList = makeValuesList(imagesIdList.value);
     print('idList: ${idList}');
     return idList;
+  }
+
+  static addImageToPerson(String personId, String fileName) async {
+    var newFile = FirebaseDatabase.instance.reference().child(personId).child('images').push();
+    await newFile.set(fileName);
   }
 }

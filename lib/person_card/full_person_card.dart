@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:family_guys/buttons/menu_button.dart';
 import 'package:family_guys/db_methods/db_main_methods.dart';
 import 'package:family_guys/db_methods/fire_storages/fire_storage_service.dart';
 import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -21,6 +26,7 @@ class FullPersonCard extends StatefulWidget {
 }
 
 class _FullPersonCardState extends State<FullPersonCard> {
+
   Future<Image> getImage(BuildContext context, List<String> imagePath) async {
     late Image m;
     await FireStorageService.loadFromStorage(context, imagePath).then((downloadUrl) {
@@ -41,7 +47,9 @@ class _FullPersonCardState extends State<FullPersonCard> {
       var path = [personId, imageId];
       print('imagePath: ${path}');
       var img = await getImage(context, path);
-      imagesList.add(img);
+      if (img!=null) {
+        imagesList.add(img);
+      }
     }
     return imagesList;
   }
@@ -132,6 +140,25 @@ class _FullPersonCardState extends State<FullPersonCard> {
                 if (snapshot.connectionState == ConnectionState.waiting) return Container(width: 10, child: LinearProgressIndicator());
 
                 return Container();
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: CircleButton(
+              icon: Icons.image,
+              onClick: () async {
+                await pickImageFromDevice(widget.personInfo.id!);
+              Fluttertoast.showToast(
+                  msg: 'Изображение добавлено',
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 3,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.black87,
+                  fontSize: 16.0
+              );
+                setState(() {
+
+                });
               },
             ),
           ),
@@ -417,4 +444,27 @@ class _FullPersonCardState extends State<FullPersonCard> {
       isDismissible: true,
     );
   }
+
+  Future<void> pickImageFromDevice(String personId) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    File imageFile = File(pickedFile!.path);
+    await uploadImageToFirebase(imageFile, personId);
+  }
+
+  uploadImageToFirebase(File image, String personId) async {
+    String basename(String filePath) {
+      var pathList = filePath.split('/');
+      print('pathList: ${pathList}');
+      var res = pathList.last;
+      return res;
+    }
+    var fileName = basename(image.path);
+    var firebaseStorageRef = FirebaseStorage.instance.ref().child(personId+'/'+fileName);
+    await firebaseStorageRef.putFile(image);
+    await DbMainMethods.addImageToPerson(personId, fileName);
+    // var taskSnapshot = await uploadTask;
+    
+  }
+
 }
