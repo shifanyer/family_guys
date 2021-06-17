@@ -6,6 +6,7 @@ import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
 import 'full_person_card.dart';
+import '../map/map_card.dart';
 import 'select_list.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,11 +36,12 @@ class _PersonCardState extends State<PersonCard> {
 
   @override
   Widget build(BuildContext context) {
-
     var fullPersonCard = BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Dialog(
-        child: FullPersonCard(personInfo: widget.personInformation,),
+        child: FullPersonCard(
+          personInfo: widget.personInformation,
+        ),
       ),
     );
 
@@ -50,7 +52,21 @@ class _PersonCardState extends State<PersonCard> {
           GestureDetector(
             onLongPress: () {
               if (widget.activeTaps) {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) => FullPersonCard(personInfo: widget.personInformation,)));
+
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => MapCard()));
+
+                /*
+                Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                        builder: (context) => FullPersonCard(
+                              personInfo: widget.personInformation,
+                            )));
+
+                 */
                 // setState(() {
                 //   showFullPersonCard = true;
                 // });
@@ -91,6 +107,13 @@ class _PersonCardState extends State<PersonCard> {
                       context,
                       CupertinoPageRoute(
                           builder: (context) => CardPage(
+                                personInfo: widget.personInformation,
+                              )));
+                } else {
+                  Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                          builder: (context) => FullPersonCard(
                                 personInfo: widget.personInformation,
                               )));
                 }
