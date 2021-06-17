@@ -64,5 +64,10 @@ class PersonInfo {
     }
   }
 
-  PersonInfo.Igor() : this(id: '-McAWaTcf7V9_Incz9ZG', name: 'Игорь', patronymic: 'Рюрикович', birthDate: DateInfo(year: 912), deathDate: DateInfo(year: 945));
+  String datesDisplay() {
+    return (birthDate?.displayDate() ?? '??????') + ' - ' + (deathDate?.displayDate() ?? '??????');
+  }
+
+  PersonInfo.Igor()
+      : this(id: '-McAWaTcf7V9_Incz9ZG', name: 'Игорь', patronymic: 'Рюрикович', birthDate: DateInfo(year: 912), deathDate: DateInfo(year: 945));
 }

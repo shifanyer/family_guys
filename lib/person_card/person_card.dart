@@ -52,12 +52,12 @@ class _PersonCardState extends State<PersonCard> {
           GestureDetector(
             onLongPress: () {
               if (widget.activeTaps) {
-
+                /*
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
                         builder: (context) => MapOfPersons()));
-
+                */
                 /*
                 Navigator.push(
                     context,
@@ -143,7 +143,7 @@ class _PersonCardState extends State<PersonCard> {
                             Navigator.push(
                                 context,
                                 CupertinoPageRoute(
-                                    builder: (context) => MapOfPersons()));
+                                    builder: (context) => MapOfPersons(personInfo: widget.personInformation,)));
                           },
                         ),
                         const SizedBox(width: 8),

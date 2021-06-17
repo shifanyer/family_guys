@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
+import 'package:family_guys/map/map_person_info.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:family_guys/db_methods/fire_storages/fire_storage_service.dart';
 
 class DbMainMethods {
   static Future<String> uploadPerson(PersonInfo personInfo, File avatar, List<File> photosList) async {
-
     uploadImageToFirebase(File image, String personId) async {
       var fileName = await DbMainMethods.addImageToPerson(personId);
       var firebaseStorageRef = FirebaseStorage.instance.ref().child(personId + '/' + fileName);
@@ -46,12 +47,11 @@ class DbMainMethods {
     newPerson.child('person_information').child('id').set(newPerson.key);
     FirebaseDatabase.instance.reference().child('available_persons').child(newPerson.key).set(newPerson.key);
     var uploadList = [uploadAvatar(avatar, newPerson.key)];
-    for (var img in photosList){
+    for (var img in photosList) {
       uploadList.add(uploadImageToFirebase(img, newPerson.key));
     }
     await Future.wait(uploadList);
     return newPerson.key;
-
   }
 
   static Future<Map> downloadPerson(String personID) async {
@@ -84,6 +84,10 @@ class DbMainMethods {
         deathDate: DateInfo(day: deathDay, month: deathMonth, year: deathYear));
   }
 
+  static Future<PersonInfo> getPersonInfo(String personId) async {
+    return makePersonInfo(await downloadPerson(personId));
+  }
+
   static Future<List<PersonInfo>> loadConnectionsByType(String personID, String connectionType) async {
     List makeIdList(Map children) {
       return children.keys.toList();
@@ -103,6 +107,22 @@ class DbMainMethods {
       personInfoList.add(makePersonInfo(childInfo));
     }
     return personInfoList;
+  }
+
+  static Future<List<String>> loadConnectionsIdList(String personID, String connectionType) async {
+    List<String> makeIdList(Map children) {
+      return children.keys.map((e) => e.toString()).toList();
+    }
+
+    DatabaseReference personsChildren = FirebaseDatabase.instance.reference().child(personID).child(connectionType);
+    var childrenList = await personsChildren.once();
+    if (childrenList.value == null) {
+      return [];
+    }
+
+    var idList = makeIdList(childrenList.value);
+
+    return idList;
   }
 
   static Future<List<PersonInfo>> loadChildren(String personID) async {
@@ -200,9 +220,66 @@ class DbMainMethods {
     return newFile.key;
   }
 
-  // static Future<String> addAvatarToPerson(String personId) async {
-  //   var newFile = FirebaseDatabase.instance.reference().child(personId).child('avatar').push();
-  //   await newFile.set(newFile.key);
-  //   return newFile.key;
-  // }
+  static Future<MapPersonInformation> loadMapPersonInfo({required BuildContext context, required PersonInfo personInfo, bool isFinal = true}) async {
+    Future<Image> getImage(BuildContext context, List<String> imagePath) async {
+      late Image m;
+      await FireStorageService.loadFromStorage(context, imagePath).then((downloadUrl) {
+        m = Image.network(
+          downloadUrl.toString(),
+          fit: BoxFit.scaleDown,
+        );
+      });
+      return m;
+    }
+
+    var avatarPath = [personInfo.id ?? '', 'avatar'];
+    var avatar = await getImage(context, avatarPath);
+
+    var children = <MapPersonInformation>[];
+    if (!isFinal) {
+      var childrenIdList = await loadConnectionsIdList(personInfo.id!, 'children');
+      for (var personId in (childrenIdList)) {
+        var connectedPersonInfo = await getPersonInfo(personId);
+        children.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+      }
+    }
+
+    var parents = <MapPersonInformation>[];
+    if (!isFinal) {
+      var parentsIdList = await loadConnectionsIdList(personInfo.id!, 'parents');
+      for (var personId in (parentsIdList)) {
+        var connectedPersonInfo = await getPersonInfo(personId);
+        parents.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+      }
+    }
+
+    var spouses = <MapPersonInformation>[];
+    if (!isFinal) {
+      var spousesIdList = await loadConnectionsIdList(personInfo.id!, 'spouses');
+      for (var personId in (spousesIdList)) {
+        var connectedPersonInfo = await getPersonInfo(personId);
+        children.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+      }
+    }
+
+    var friends = <MapPersonInformation>[];
+    if (!isFinal) {
+      var friendsIdList = await loadConnectionsIdList(personInfo.id!, 'friends');
+      for (var personId in (friendsIdList)) {
+        var connectedPersonInfo = await getPersonInfo(personId);
+        parents.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+      }
+    }
+
+    MapPersonInformation result =
+        MapPersonInformation(personInfo: personInfo, avatar: avatar, children: children, parents: parents, friends: friends, spouses: spouses);
+
+    return result;
+  }
+
+// static Future<String> addAvatarToPerson(String personId) async {
+//   var newFile = FirebaseDatabase.instance.reference().child(personId).child('avatar').push();
+//   await newFile.set(newFile.key);
+//   return newFile.key;
+// }
 }

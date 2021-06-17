@@ -1,3 +1,4 @@
+import 'package:family_guys/info_objects/person_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,8 +7,10 @@ import 'dot.dart';
 class MapCard extends StatelessWidget {
   final double cardWidth;
   final double cardHeight;
+  final Image avatar;
+  final PersonInfo personInfo;
 
-  const MapCard({Key? key, required this.cardWidth, required this.cardHeight}) : super(key: key);
+  const MapCard({Key? key, required this.cardWidth, required this.cardHeight, required this.avatar, required this.personInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +37,7 @@ class MapCard extends StatelessWidget {
                   Container(
                     width: cardWidth,
                     height: cardHeight * 0.6,
-                    child: Image(
-                      image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
-                      // fit: BoxFit.cover,
-                    ),
+                    child: avatar,
                   ),
                   Container(
                     width: cardWidth,
@@ -53,7 +53,7 @@ class MapCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
-                          text: 'Иванов Иван ИвановичAAAAAAAAAAAAAAA',
+                          text: personInfo.nameDisplay(),
                         ),
                       ),
                     ),
@@ -72,7 +72,7 @@ class MapCard extends StatelessWidget {
                             fontWeight: FontWeight.w100,
                             color: Colors.blueGrey,
                           ),
-                          text: '11.12.2001 - 11.12.2121',
+                          text: personInfo.datesDisplay(),
                         ),
                       ),
                     ),
