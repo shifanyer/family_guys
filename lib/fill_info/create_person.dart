@@ -342,7 +342,7 @@ class _SelectPageState extends State<SelectPage> {
 
   Future<File> pickImageFromDevice() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
     // print(pickedFile.runtimeType);
     File imageFile = File(pickedFile!.path);
     return imageFile;

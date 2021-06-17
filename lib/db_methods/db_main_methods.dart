@@ -258,7 +258,7 @@ class DbMainMethods {
       var spousesIdList = await loadConnectionsIdList(personInfo.id!, 'spouses');
       for (var personId in (spousesIdList)) {
         var connectedPersonInfo = await getPersonInfo(personId);
-        children.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+        spouses.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
       }
     }
 
