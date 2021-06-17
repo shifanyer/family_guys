@@ -351,6 +351,7 @@ class _FullPersonCardState extends State<FullPersonCard> {
                                   color: Colors.white,
                                   icon: Icons.add,
                                   onClick: () {
+                                    print('widget.personInfo.id: ${widget.personInfo.id} ${widget.personInfo.birthDate!.displayDate()}');
                                     return bottomAddConnection(widget.personInfo, ConnectionType.friends_friends);
                                   }),
                             ),
@@ -467,10 +468,10 @@ class _FullPersonCardState extends State<FullPersonCard> {
       var res = pathList.last;
       return res;
     }
-    var fileName = basename(image.path);
+    // var fileName = basename(image.path);
+    var fileName= await DbMainMethods.addImageToPerson(personId);
     var firebaseStorageRef = FirebaseStorage.instance.ref().child(personId+'/'+fileName);
     await firebaseStorageRef.putFile(image);
-    await DbMainMethods.addImageToPerson(personId, fileName);
     // var taskSnapshot = await uploadTask;
     
   }

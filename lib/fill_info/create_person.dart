@@ -1,9 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:family_guys/db_methods/db_main_methods.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/person_card/person_card.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -67,22 +72,28 @@ class _SelectPageState extends State<SelectPage> {
   List _selectedAnimals4 = [];
   List _selectedAnimals5 = [];
   final _multiSelectKey = GlobalKey<FormFieldState>();
-  late TextEditingController nameController;
-  late TextEditingController surnameController;
-  late TextEditingController patronymicController;
-  late TextEditingController birthDateController;
-  late TextEditingController deathDateController;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController surnameController = TextEditingController();
+  TextEditingController patronymicController = TextEditingController();
+  TextEditingController birthDateController = TextEditingController();
+  TextEditingController deathDateController = TextEditingController();
   PickerDateRange datesRange = PickerDateRange(DateTime.now(), DateTime.now());
   bool isUpload = false;
+  late List<Image> photosList;
+  late List<File> photosFileList;
+  Image? avatar;
+  File? avatarFile;
 
   @override
   void initState() {
+    photosList = [];
+    photosFileList = [];
     // _selectedAnimals5 = _animals;
-    nameController = TextEditingController();
-    patronymicController = TextEditingController();
-    surnameController = TextEditingController();
-    birthDateController = TextEditingController();
-    deathDateController = TextEditingController();
+    // nameController =        TextEditingController();
+    // patronymicController =  TextEditingController();
+    // surnameController =     TextEditingController();
+    // birthDateController =   TextEditingController();
+    // deathDateController =   TextEditingController();
     super.initState();
   }
 
@@ -155,6 +166,66 @@ class _SelectPageState extends State<SelectPage> {
               ),
               SizedBox(
                 width: 10,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Фото'),
+                ),
+              ),
+              Container(
+                height: 100,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    for (var img in photosList)
+                      Container(
+                        width: 80,
+                        height: 80,
+                        child: img,
+                      ),
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () async {
+                        var newImgFile = (await pickImageFromDevice());
+                        photosList.add(Image.file(newImgFile));
+                        photosFileList.add((newImgFile));
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Аватар'),
+                ),
+              ),
+              Container(
+                height: 100,
+                child: Row(
+                  children: [
+                    if (avatar != null)
+                      Container(
+                        width: 80,
+                        height: 80,
+                        child: avatar,
+                      ),
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: () async {
+                        var newImgFile = (await pickImageFromDevice());
+                        avatar = (Image.file(newImgFile));
+                        avatarFile = newImgFile;
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 20),
               Container(
@@ -230,7 +301,8 @@ class _SelectPageState extends State<SelectPage> {
             isUpload = true;
           });
           var personInfo = toPersonInfo();
-          await DbMainMethods.uploadPerson(personInfo);
+          var personId = await DbMainMethods.uploadPerson(personInfo, avatarFile!, photosFileList);
+          personInfo.id = personId;
           Navigator.pop(context);
           Navigator.push(
               context,
@@ -254,7 +326,7 @@ class _SelectPageState extends State<SelectPage> {
         "${dates.endDate?.day ?? '?'}.${dates.endDate?.month ?? '?'}.${dates.endDate?.year ?? '?'}";
   }
 
-  DateInfo makeDateInfo(DateTime? date){
+  DateInfo makeDateInfo(DateTime? date) {
     return DateInfo(day: date?.day ?? 666999, month: date?.month ?? 666999, year: date?.year ?? 666999);
   }
 
@@ -266,6 +338,15 @@ class _SelectPageState extends State<SelectPage> {
         birthDate: makeDateInfo(datesRange.startDate),
         deathDate: makeDateInfo(datesRange.endDate));
     return personInfo;
+  }
+
+  Future<File> pickImageFromDevice() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    // print(pickedFile.runtimeType);
+    File imageFile = File(pickedFile!.path);
+    return imageFile;
+    // await uploadImageToFirebase(imageFile, personId);
   }
 
 }

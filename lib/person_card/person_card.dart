@@ -138,6 +138,16 @@ class _PersonCardState extends State<PersonCard> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         TextButton(
+                          child: const Text('Карта'),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                    builder: (context) => MapOfPersons()));
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
                           child: const Text('дети'),
                           onPressed: () {
                             // SelectField();

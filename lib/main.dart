@@ -1,4 +1,5 @@
 import 'package:family_guys/card_page.dart';
+import 'package:family_guys/db_methods/db_main_methods.dart';
 import 'package:family_guys/lines/lines.dart';
 import 'package:family_guys/person_card/person_card.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,8 +61,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return CardPage(
-      personInfo: PersonInfo.Igor(),
+    return FutureBuilder<Map>(
+      future: DbMainMethods.downloadPerson('-McQMEZhnEAk5s6nf_d_'),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return CardPage(
+          personInfo: DbMainMethods.makePersonInfo(snapshot.data!),
+        );
+        }
+        else{
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      }
     );
   }
 }

@@ -1,10 +1,26 @@
+import 'dart:io';
+
 import 'package:family_guys/info_objects/connection_types.dart';
 import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class DbMainMethods {
-  static uploadPerson(PersonInfo personInfo) {
+  static Future<String> uploadPerson(PersonInfo personInfo, File avatar, List<File> photosList) async {
+
+    uploadImageToFirebase(File image, String personId) async {
+      var fileName = await DbMainMethods.addImageToPerson(personId);
+      var firebaseStorageRef = FirebaseStorage.instance.ref().child(personId + '/' + fileName);
+      await firebaseStorageRef.putFile(image);
+    }
+
+    uploadAvatar(File image, String personId) async {
+      var firebaseStorageRef = FirebaseStorage.instance.ref().child(personId + '/avatar');
+      await firebaseStorageRef.putFile(image);
+    }
+
     DatabaseReference newPerson = FirebaseDatabase.instance.reference().push();
     uploadName() {
       newPerson.child('person_information').child('name').set(personInfo.name ?? '');
@@ -29,15 +45,22 @@ class DbMainMethods {
     uploadDeathDate();
     newPerson.child('person_information').child('id').set(newPerson.key);
     FirebaseDatabase.instance.reference().child('available_persons').child(newPerson.key).set(newPerson.key);
+    var uploadList = [uploadAvatar(avatar, newPerson.key)];
+    for (var img in photosList){
+      uploadList.add(uploadImageToFirebase(img, newPerson.key));
+    }
+    await Future.wait(uploadList);
+    return newPerson.key;
+
   }
 
-  static downloadPerson(String personID) async {
+  static Future<Map> downloadPerson(String personID) async {
     DatabaseReference person = FirebaseDatabase.instance.reference().child(personID).child('person_information');
     var info = await person.once();
     return info.value;
   }
 
-  static makePersonInfo(Map info) {
+  static PersonInfo makePersonInfo(Map info) {
     var name = info['name'];
     var surname = info['surname'];
     var patronymic = info['patronymic'];
@@ -171,8 +194,15 @@ class DbMainMethods {
     return idList;
   }
 
-  static addImageToPerson(String personId, String fileName) async {
+  static Future<String> addImageToPerson(String personId) async {
     var newFile = FirebaseDatabase.instance.reference().child(personId).child('images').push();
-    await newFile.set(fileName);
+    await newFile.set(newFile.key);
+    return newFile.key;
   }
+
+  // static Future<String> addAvatarToPerson(String personId) async {
+  //   var newFile = FirebaseDatabase.instance.reference().child(personId).child('avatar').push();
+  //   await newFile.set(newFile.key);
+  //   return newFile.key;
+  // }
 }

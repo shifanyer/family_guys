@@ -23,20 +23,25 @@ class _MapOfPersonsState extends State<MapOfPersons> {
 
   @override
   Widget build(BuildContext context) {
-    var childrenNumber = 3;
+    var childrenNumber = 2;
     var parentsNumber = 2;
-    var zoomValue = 1.0;
+    var zoomValue = 0.9;
     return Scaffold(
+      appBar: AppBar(),
       body: ZDragDetector(
         builder: (context, zDragController) {
           var x = -zDragController.value.y * 100;
+          /*
           if ((x.abs()) > (MediaQuery.of(context).size.width / 2) / zoomValue) {
             x = ((MediaQuery.of(context).size.width / 2) / zoomValue) * (x.isNegative ? -1 : 1);
           }
+          */
           var y = -zDragController.value.x * 100;
+          /*
           if ((y.abs()) > (MediaQuery.of(context).size.height / 2) / zoomValue) {
             y = ((MediaQuery.of(context).size.height / 2) / zoomValue) * (y.isNegative ? -1 : 1);
           }
+          */
           zDragController.value = ZVector(y / (-100), x / -100, zDragController.value.z);
           var translateVector = ZVector(x, -zDragController.value.x * 100, zDragController.value.z);
           // print('controller.rotate: ${zDragController.value}');
