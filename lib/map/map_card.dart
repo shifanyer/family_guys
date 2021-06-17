@@ -1,67 +1,131 @@
-import 'package:family_guys/info_objects/person_info.dart';
-import 'package:family_guys/person_card/person_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:zflutter/zflutter.dart';
-import 'dart:math';
 
-class MapCard extends StatefulWidget {
-  @override
-  _MapCardState createState() => _MapCardState();
-}
+import 'dot.dart';
 
-class _MapCardState extends State<MapCard> {
-  // ZDragController zDragController = ZDragController(ZVector.zero);
+class MapCard extends StatelessWidget {
+  final double cardWidth;
+  final double cardHeight;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  const MapCard({Key? key, required this.cardWidth, required this.cardHeight}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ZDragDetector(
-        builder: (context, zDragController) {
-          var x = -zDragController.value.y * 100;
-          if ((x.abs() ?? 0.0) > MediaQuery.of(context).size.width / 2){
-            x = (MediaQuery.of(context).size.width / 2) * (x.isNegative ? -1 : 1);
-          }
-          var y = -zDragController.value.x * 100;
-          if ((y.abs() ?? 0.0) > MediaQuery.of(context).size.height / 2){
-            y = (MediaQuery.of(context).size.height / 2) * (y.isNegative ? -1 : 1);
-          }
-          zDragController.value = ZVector(y / -100, x / -100 , zDragController.value.z);
-          var translateVector = ZVector(x, -zDragController.value.x * 100, zDragController.value.z);
-          print('controller.rotate: ${zDragController.value}');
-          return ZIllustration(
+    var dotSize = 25.0;
+    return Container(
+      width: cardWidth,
+      height: cardHeight,
+      child: Card(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [
+                Colors.black12,
+                Colors.white70,
+              ],
+            ),
+          ),
+          child: Stack(
             children: [
-              ZPositioned(
-                  translate: translateVector,
-                  child: ZToBoxAdapter(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    child: PersonCard(
-                      personInformation: PersonInfo.Igor(),
-                      shortInfo: true,
-                      activeTaps: false,
+              Column(
+                children: [
+                  Container(
+                    width: cardWidth,
+                    height: cardHeight * 0.6,
+                    child: Image(
+                      image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
+                      // fit: BoxFit.cover,
                     ),
-                  )),
-              /*
-              ZPositioned(
-                  rotate: zDragController.rotate,
-                  child: ZToBoxAdapter(
-                    width: 80,
-                    height: 80,
-                    child: Container(
-                      color: Colors.redAccent,
+                  ),
+                  Container(
+                    width: cardWidth,
+                    // height: cardHeight * 0.2,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: cardWidth * 0.1, top: cardHeight * 0.05, right: cardWidth * 0.1),
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        strutStyle: StrutStyle(fontSize: 16.0),
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          text: 'Иванов Иван ИвановичAAAAAAAAAAAAAAA',
+                        ),
+                      ),
                     ),
-                  )),
-
-               */
+                  ),
+                  Container(
+                    width: cardWidth,
+                    height: cardHeight * 0.1,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: cardWidth * 0.1, bottom: cardHeight * 0.05, right: cardWidth * 0.1),
+                      child: RichText(
+                        overflow: TextOverflow.ellipsis,
+                        strutStyle: StrutStyle(fontSize: 12.0),
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w100,
+                            color: Colors.blueGrey,
+                          ),
+                          text: '11.12.2001 - 11.12.2121',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              //children dot
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: cardHeight - dotSize),
+                  child: Dot(
+                    dotColor: Colors.blueAccent,
+                    dotBorderColor: Colors.redAccent,
+                    dotSize: 25.0,
+                  ),
+                ),
+              ),
+              // spouse dot
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(left: cardWidth - dotSize),
+                  child: Dot(
+                    dotColor: Colors.teal,
+                    dotBorderColor: Colors.lightGreenAccent,
+                    dotSize: 25.0,
+                  ),
+                ),
+              ),
+              // friends dot
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(right: cardWidth - dotSize),
+                  child: Dot(
+                    dotColor: Colors.pinkAccent,
+                    dotBorderColor: Colors.cyanAccent,
+                    dotSize: 25.0,
+                  ),
+                ),
+              ),
+              // parents dot
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: cardHeight - dotSize),
+                  child: Dot(
+                    dotColor: Colors.orangeAccent,
+                    dotBorderColor: Colors.purple,
+                    dotSize: 25.0,
+                  ),
+                ),
+              )
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }

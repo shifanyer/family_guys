@@ -49,9 +49,6 @@ class _CardPageState extends State<CardPage> with SingleTickerProviderStateMixin
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             PersonCard(personInformation: widget.personInfo, shortInfo: false),
-            CustomPaint(
-              painter: LinePainter(false),
-            )
           ],
         ),
       ),

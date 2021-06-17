@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class LinePainter extends CustomPainter {
   final bool type;
+  final double x;
+  final double y;
 
-  LinePainter(this.type);
+  LinePainter(this.type, this.x, this.y);
   //         <-- CustomPainter class
   @override
   void paint(Canvas canvas, Size size) {
     final p1 = Offset(0, 0);
-    final p2 = Offset(type ? -150 : 150 , 150);
+    final p2 = Offset(x, y);
     final paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 4;

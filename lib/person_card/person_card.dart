@@ -6,7 +6,7 @@ import 'package:family_guys/info_objects/date.dart';
 import 'package:family_guys/info_objects/person_info.dart';
 import 'package:family_guys/my_icons.dart';
 import 'full_person_card.dart';
-import '../map/map_card.dart';
+import '../map/map.dart';
 import 'select_list.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,7 +56,7 @@ class _PersonCardState extends State<PersonCard> {
                 Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) => MapCard()));
+                        builder: (context) => MapOfPersons()));
 
                 /*
                 Navigator.push(
