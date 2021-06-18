@@ -32,7 +32,7 @@ class _MapOfPersonsState extends State<MapOfPersons> {
     var zoomValue = 0.5;
     return Scaffold(
       appBar: AppBar(),
-      body: FutureBuilder <MapPersonInformation>(
+      body: FutureBuilder<MapPersonInformation>(
           future: DbMainMethods.loadMapPersonInfo(context: context, personInfo: widget.personInfo, isFinal: false),
           builder: (context, snapshot) {
             if (snapshot.hasData) {

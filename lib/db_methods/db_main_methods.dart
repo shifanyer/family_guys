@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:family_guys/db_methods/fire_storages/fire_storage_service.dart';
 
 class DbMainMethods {
+
   static Future<String> uploadPerson(PersonInfo personInfo, File avatar, List<File> photosList) async {
     uploadImageToFirebase(File image, String personId) async {
       var fileName = await DbMainMethods.addImageToPerson(personId);
@@ -267,7 +268,7 @@ class DbMainMethods {
       var friendsIdList = await loadConnectionsIdList(personInfo.id!, 'friends');
       for (var personId in (friendsIdList)) {
         var connectedPersonInfo = await getPersonInfo(personId);
-        parents.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
+        friends.add(await loadMapPersonInfo(context: context, personInfo: connectedPersonInfo));
       }
     }
 
@@ -275,6 +276,23 @@ class DbMainMethods {
         MapPersonInformation(personInfo: personInfo, avatar: avatar, children: children, parents: parents, friends: friends, spouses: spouses);
 
     return result;
+  }
+
+  static Future<ImageProvider> getAvatar(BuildContext context, String personId) async {
+    Future<Image> getImage(BuildContext context, List<String> imagePath) async {
+      late Image m;
+      await FireStorageService.loadFromStorage(context, imagePath).then((downloadUrl) {
+        m = Image.network(
+          downloadUrl.toString(),
+          // fit: BoxFit.scaleDown,
+        );
+      });
+      return m;
+    }
+
+    var avatarPath = [personId, 'avatar'];
+    var avatar = await getImage(context, avatarPath);
+    return avatar.image;
   }
 
 // static Future<String> addAvatarToPerson(String personId) async {

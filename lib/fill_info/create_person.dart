@@ -228,6 +228,7 @@ class _SelectPageState extends State<SelectPage> {
                 ),
               ),
               SizedBox(height: 20),
+              /*
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withOpacity(.4),
@@ -275,6 +276,7 @@ class _SelectPageState extends State<SelectPage> {
                   ],
                 ),
               ),
+              */
               /*
               MultiSelectDialogField(
                 onConfirm: (val) {

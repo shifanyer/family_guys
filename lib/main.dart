@@ -5,7 +5,7 @@ import 'package:family_guys/person_card/person_card.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'info_objects/person_info.dart';
 
 Future<void> main() async {
@@ -61,20 +61,33 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map>(
-      future: DbMainMethods.downloadPerson('-McQMEZhnEAk5s6nf_d_'),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return CardPage(
-          personInfo: DbMainMethods.makePersonInfo(snapshot.data!),
-        );
-        }
-        else{
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
       }
+    });
+    // return ;
+
+    return FutureBuilder<Map>(
+        future: DbMainMethods.downloadPerson('-McU48274nrvqDQRSlOB'),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return CardPage(
+              personInfo: DbMainMethods.makePersonInfo(snapshot.data!),
+            );
+          }
+          else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
     );
+
   }
 }

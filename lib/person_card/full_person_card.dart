@@ -18,8 +18,9 @@ import 'select_list.dart';
 
 class FullPersonCard extends StatefulWidget {
   final PersonInfo personInfo;
+  final ImageProvider avatar;
 
-  const FullPersonCard({Key? key, required this.personInfo}) : super(key: key);
+  const FullPersonCard({Key? key, required this.personInfo, required this.avatar}) : super(key: key);
 
   @override
   _FullPersonCardState createState() => _FullPersonCardState();
@@ -69,6 +70,10 @@ class _FullPersonCardState extends State<FullPersonCard> {
             pinned: true,
             expandedHeight: 250.0,
             flexibleSpace: FlexibleSpaceBar(
+              background: Image(
+                image: widget.avatar,
+                fit: BoxFit.cover,
+              ),
               title: Text(widget.personInfo.nameDisplay()),
             ),
           ),

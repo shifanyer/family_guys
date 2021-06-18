@@ -25,25 +25,15 @@ class PersonCard extends StatefulWidget {
 
 class _PersonCardState extends State<PersonCard> {
   var IgorChildren = <PersonInfo>[];
-  late bool showFullPersonCard;
   PersonInfo personInformation = PersonInfo();
 
   @override
   void initState() {
-    showFullPersonCard = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var fullPersonCard = BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-      child: Dialog(
-        child: FullPersonCard(
-          personInfo: widget.personInformation,
-        ),
-      ),
-    );
 
     return Container(
       margin: EdgeInsets.only(top: 20.0, left: 10, right: 10),
@@ -99,7 +89,7 @@ class _PersonCardState extends State<PersonCard> {
                 */
               }
             },
-            onTap: () {
+            onTap: () async {
               if (widget.activeTaps) {
                 if (widget.shortInfo) {
                   Navigator.pop(context);
@@ -110,12 +100,14 @@ class _PersonCardState extends State<PersonCard> {
                                 personInfo: widget.personInformation,
                               )));
                 } else {
+                  var avatar = await DbMainMethods.getAvatar(context, widget.personInformation.id!);
                   Navigator.push(
                       context,
                       CupertinoPageRoute(
                           builder: (context) => FullPersonCard(
-                                personInfo: widget.personInformation,
-                              )));
+                            personInfo: widget.personInformation,
+                            avatar: avatar,
+                          )));
                 }
               }
             },
@@ -213,7 +205,6 @@ class _PersonCardState extends State<PersonCard> {
               ),
             ),
           ),
-          if (showFullPersonCard) fullPersonCard
         ],
       ),
     );
