@@ -210,6 +210,14 @@ class _FullPersonCardState extends State<FullPersonCard> {
                                   color: Colors.white,
                                   icon: Icons.add,
                                   onClick: () {
+                                    Fluttertoast.showToast(
+                                        msg: 'Дважды тапните на карточку, чтобы создать связь',
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.black12,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                     return bottomAddConnection(widget.personInfo, ConnectionType.children_parents);
                                   }),
                             ),
@@ -259,6 +267,14 @@ class _FullPersonCardState extends State<FullPersonCard> {
                                   color: Colors.white,
                                   icon: Icons.add,
                                   onClick: () {
+                                    Fluttertoast.showToast(
+                                        msg: 'Дважды тапните на карточку, чтобы создать связь',
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.black12,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                     return bottomAddConnection(widget.personInfo, ConnectionType.parents_children);
                                   }),
                             ),
@@ -307,6 +323,14 @@ class _FullPersonCardState extends State<FullPersonCard> {
                                   color: Colors.white,
                                   icon: Icons.add,
                                   onClick: () {
+                                    Fluttertoast.showToast(
+                                        msg: 'Дважды тапните на карточку, чтобы создать связь',
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.black12,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                     return bottomAddConnection(widget.personInfo, ConnectionType.spouses_spouses);
                                   }),
                             ),
@@ -356,7 +380,14 @@ class _FullPersonCardState extends State<FullPersonCard> {
                                   color: Colors.white,
                                   icon: Icons.add,
                                   onClick: () {
-                                    print('widget.personInfo.id: ${widget.personInfo.id} ${widget.personInfo.birthDate!.displayDate()}');
+                                    Fluttertoast.showToast(
+                                        msg: 'Дважды тапните на карточку, чтобы создать связь',
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 5,
+                                        backgroundColor: Colors.black12,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0
+                                    );
                                     return bottomAddConnection(widget.personInfo, ConnectionType.friends_friends);
                                   }),
                             ),

@@ -31,6 +31,7 @@ class SelectPerson extends StatelessWidget {
       minChildSize: 0.4,
       maxChildSize: 0.7,
       builder: (BuildContext context, ScrollController scrollController) {
+
         if (persons.length == 0) {
           return Center(child: Text(noItemsMessage));
         }
