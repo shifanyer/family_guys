@@ -62,9 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     FirebaseAuth auth = FirebaseAuth.instance;
-    FirebaseAuth.instance
-        .authStateChanges()
-        .listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         print('User is currently signed out!');
       } else {
@@ -80,14 +78,11 @@ class _MyHomePageState extends State<MyHomePage> {
             return CardPage(
               personInfo: DbMainMethods.makePersonInfo(snapshot.data!),
             );
-          }
-          else{
+          } else {
             return Center(
               child: CircularProgressIndicator(),
             );
           }
-        }
-    );
-
+        });
   }
 }
